@@ -1,6 +1,12 @@
 {
     "ru": {
-        "start": "Привет!"
+        "start": "Привет!",
+        "already_in": "Вы уже с нами!",
+        "user_added": "Добро пожаловать!",
+        "insert_word": "Введите слово, которое хотите добавить:",
+        "insert_translate": "Введите перевод:",
+        "word_was_inserted": "Добавлено слово:",
+        "waiting_for_text": "Ждем от вас текста"
     },
     "en": {
         "start": "Hello!"
