@@ -1,0 +1,11 @@
+{
+    "ru": {
+        "start": "Привет!"
+    },
+    "en": {
+        "start": "Hello!"
+    },
+    "emoji": {
+        "superstar": "\ud83d\udc69\u200d\ud83c\udfa4"
+    }
+}

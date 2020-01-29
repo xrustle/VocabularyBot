@@ -1,0 +1,13 @@
+{
+    "bot_token": "bot_token",
+    "proxy": {
+        "https": "socks5://login:pass@host:port"
+    },
+    "mongo": {
+        "uri": {
+            "host": "mongo db host",
+            "port": 27017
+        },
+        "db": "vocabulary_bot"
+    }
+}
