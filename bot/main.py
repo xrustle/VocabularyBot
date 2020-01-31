@@ -3,6 +3,7 @@ from bot.msg import msg
 from bot.db import db
 import telebot
 from telebot import apihelper, types
+import re
 
 apihelper.proxy = PROXY
 bot = telebot.TeleBot(TOKEN)
@@ -24,6 +25,14 @@ def step_equals(user_id, step):
         return user['step'] == step
 
 
+def command_value(command, text):
+    re_search = re.search(rf'\/{command}\s+([\S].+)', text)
+    if re_search:
+        return re_search[1]
+    else:
+        return None
+
+
 @bot.message_handler(commands=['start'])
 def command_start(m: telebot.types.Message):
     cid = m.chat.id
@@ -40,12 +49,49 @@ def command_add_ru(m: telebot.types.Message):
 @bot.message_handler(commands=['add'])
 def command_add(m: telebot.types.Message):
     cid = m.chat.id
+    word = command_value('add', m.text)
+    if word:
+        m.text = word
+        command_add_step1(m)
+        return
     users[cid] = {'step': 1}
     bot.send_message(cid, msg('ru', 'insert_word'), reply_markup=clear_markup)
 
 
+@bot.message_handler(commands=['find'])
+def command_find(m: telebot.types.Message):
+    cid = m.chat.id
+    search_query = command_value('find', m.text)
+    if search_query:
+        m.text = search_query
+        command_find_step1(m)
+        return
+    users[cid] = {'step': 3}
+    bot.send_message(cid, msg('ru', 'insert_search_query'), reply_markup=clear_markup)
+
+
+@bot.message_handler(func=lambda m: step_equals(m.chat.id, 3))
+def command_find_step1(m: telebot.types.Message):
+    cid = m.chat.id
+    if not m.text:
+        bot.send_message(cid, msg('ru', 'waiting_for_text'))
+        return
+    results = db.get_search_results(cid, m.text)
+    if not list(results):
+        print(1)
+        bot.send_message(cid, msg('ru', 'no_results'))
+        users[cid] = {'step': 0}
+        return
+    for result in results:
+        print(2)
+        bot.send_message(cid,
+                         f'*{result["word"]}* - {result["definition"]}',
+                         parse_mode='markdown')
+    users[cid] = {'step': 0}
+
+
 @bot.message_handler(func=lambda m: step_equals(m.chat.id, 1))
-def command_start(m: telebot.types.Message):
+def command_add_step1(m: telebot.types.Message):
     cid = m.chat.id
     if not m.text:
         bot.send_message(cid, msg('ru', 'waiting_for_text'))
@@ -56,7 +102,7 @@ def command_start(m: telebot.types.Message):
 
 
 @bot.message_handler(func=lambda m: step_equals(m.chat.id, 2))
-def command_start(m: telebot.types.Message):
+def command_add_step2(m: telebot.types.Message):
     cid = m.chat.id
     if not m.text:
         bot.send_message(cid, msg('ru', 'waiting_for_text'))

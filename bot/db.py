@@ -15,8 +15,13 @@ class MongoDB:
         collection = self.db[str(user_id)]
         return collection.find({})
 
+    def get_search_results(self, user_id, search_query):
+        collection = self.db[str(user_id)]
+        return collection.find({'word': {'$regex': search_query}})
+
+
 db = MongoDB()
 
-if __name__ == "__main__":
-    item = {"test": "test"}
-    db.insert(item)
+res = db.get_search_results(844216, 'Word')
+for i in res:
+    print(i['word'])
