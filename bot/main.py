@@ -27,7 +27,7 @@ def step_equals(user_id, step):
 @bot.message_handler(commands=['start'])
 def command_start(m: telebot.types.Message):
     cid = m.chat.id
-    bot.send_message(cid, text=msg('ru', 'start_instruction'), reply_markup=add_markup)
+    bot.send_message(cid, text=msg('ru', 'find_instruction'), reply_markup=find_markup)
     if cid not in users:
         users[cid] = {'step': 0}
 
@@ -66,7 +66,7 @@ def command_start(m: telebot.types.Message):
     bot.send_message(cid,
                      msg('ru', 'word_was_inserted') + '\n\n*' + users[cid]['word'] + '* - ' + m.text,
                      parse_mode='markdown',
-                     reply_markup=add_markup)
+                     reply_markup=find_markup)
     users[cid] = {'step': 0}
 
 
