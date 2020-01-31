@@ -1,5 +1,5 @@
 from bot.config import TOKEN, PROXY
-from bot.msg import msg
+from bot.msg import msg, emoji
 from bot.db import db
 import telebot
 from telebot import apihelper, types
@@ -36,7 +36,9 @@ def command_value(command, text):
 @bot.message_handler(commands=['start'])
 def command_start(m: telebot.types.Message):
     cid = m.chat.id
-    bot.send_message(cid, text=msg('ru', 'find_instruction'), reply_markup=find_markup)
+    bot.send_message(cid,
+                     text=msg('ru', 'help'))
+                     # reply_markup=find_markup)
     if cid not in users:
         users[cid] = {'step': 0}
 
@@ -76,14 +78,12 @@ def command_find_step1(m: telebot.types.Message):
     if not m.text:
         bot.send_message(cid, msg('ru', 'waiting_for_text'))
         return
-    results = db.get_search_results(cid, m.text)
-    if not list(results):
-        print(1)
+    results = list(db.get_search_results(cid, m.text))
+    if not results:
         bot.send_message(cid, msg('ru', 'no_results'))
         users[cid] = {'step': 0}
         return
     for result in results:
-        print(2)
         bot.send_message(cid,
                          f'*{result["word"]}* - {result["definition"]}',
                          parse_mode='markdown')
@@ -110,10 +110,15 @@ def command_add_step2(m: telebot.types.Message):
     db.insert_word(cid, {'word': users[cid]['word'],
                          'definition': m.text})
     bot.send_message(cid,
-                     msg('ru', 'word_was_inserted') + '\n\n*' + users[cid]['word'] + '* - ' + m.text,
-                     parse_mode='markdown',
-                     reply_markup=find_markup)
+                     f'{emoji("open_book")} *{users[cid]["word"]}* - {m.text}',
+                     parse_mode='markdown')
+                     # reply_markup=find_markup)
     users[cid] = {'step': 0}
+
+
+@bot.message_handler(content_types=['text'])
+def command_add_step2(m: telebot.types.Message):
+    command_start(m)
 
 
 @bot.inline_handler(func=lambda _: True)

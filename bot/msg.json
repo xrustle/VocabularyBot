@@ -1,6 +1,6 @@
 {
     "ru": {
-        "find_instruction": "Для поиска слова в словаре, нажмите кнопку ниже",
+        "help": "/add - Добавить слово в словарь\n/find - Найти слово в словаре",
         "add_instruction": "Для добавления слова нажмите кнопку ниже",
         "insert_word": "Введите слово, которое хотите добавить:",
         "insert_translate": "Введите перевод:",
@@ -16,6 +16,7 @@
         "start": "Hello!"
     },
     "emoji": {
-        "superstar": "\ud83d\udc69\u200d\ud83c\udfa4"
+        "superstar": "\ud83d \udc69 \u200d \ud83c \udfa4",
+        "open_book": "\ud83d\udcd6"
     }
 }

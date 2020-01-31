@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from bot.config import MONGO
+import re
 
 
 class MongoDB:
@@ -17,11 +18,8 @@ class MongoDB:
 
     def get_search_results(self, user_id, search_query):
         collection = self.db[str(user_id)]
-        return collection.find({'word': {'$regex': search_query}})
+        regexp = re.compile(rf'{search_query}', re.IGNORECASE)
+        return collection.find({'word': {'$regex': regexp}})
 
 
 db = MongoDB()
-
-res = db.get_search_results(844216, 'Word')
-for i in res:
-    print(i['word'])
