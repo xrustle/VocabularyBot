@@ -1,6 +1,9 @@
 import json
+import os
 
-with open('msg.json', encoding='utf-8') as json_data_file:
+path = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(path, 'msg.json'), encoding='utf-8') as json_data_file:
     messages = json.load(json_data_file)
 
 

@@ -1,11 +1,13 @@
-from bot.config import TOKEN, PROXY
+from bot.config import TOKEN, PROXY, PROXY_ON
 from bot.msg import msg, emoji
 from bot.db import db
 import telebot
 from telebot import apihelper, types
 import re
 
-apihelper.proxy = PROXY
+if PROXY_ON:
+    apihelper.proxy = PROXY
+
 bot = telebot.TeleBot(TOKEN)
 
 users = {}
